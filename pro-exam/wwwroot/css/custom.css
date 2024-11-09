@@ -1,0 +1,58 @@
+﻿/* custom.css */
+
+/* إعداد خط جميل */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #b3cde0, #6497b1);
+    color: #333;
+}
+
+h2 {
+    color: #003366;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+h2:hover {
+    transform: rotate(5deg);
+}
+
+.table {
+    background-color: #eaf6ff;
+    border: 1px solid #cce0ff;
+    opacity: 0; /* لتأثير الفتح التدريجي */
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #d0ebff;
+    animation: blink 0.2s alternate infinite;
+}
+
+/* تأثير الوميض */
+@keyframes blink {
+    0% { background-color: #d0ebff; }
+    100% { background-color: #eaf6ff; }
+}
+
+/* زر الرجوع للأعلى */
+#backToTop {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    background-color: #005b96;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+#backToTop:hover {
+    background-color: #003366;
+}

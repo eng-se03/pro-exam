@@ -1,0 +1,75 @@
+﻿/* تحسين لون الخلفية في شريط التنقل والرأس */
+.navbar {
+    background-color: #2c3e50; /* لون أزرق داكن */
+}
+
+    .navbar .navbar-brand, .navbar-nav .nav-link {
+        color: #ecf0f1 !important; /* لون فاتح للروابط */
+    }
+
+        .navbar .navbar-brand:hover, .navbar-nav .nav-link:hover {
+            color: #3498db !important; /* لون عند تمرير الماوس */
+            transition: color 0.3s ease;
+        }
+
+/* تحسين الأزرار */
+.btn-primary {
+    background-color: #3498db;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+    }
+
+/* تظليل وتحسين الحواف للأقسام */
+.container, .footer {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* تلوين وتحريك الروابط */
+a.nav-link.text-dark {
+    color: #2c3e50 !important;
+    transition: color 0.3s ease;
+}
+
+    a.nav-link.text-dark:hover {
+        color: #3498db !important;
+    }
+
+/* تحسين الfooter */
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 10px;
+}
+/* ألوان وحركات للروابط في شريط التنقل */
+.navbar .nav-link {
+    color: #ecf0f1 !important; /* اللون الأساسي للروابط */
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+    .navbar .nav-link:hover {
+        color: #3498db !important; /* اللون عند التمرير */
+        background-color: #ecf0f1; /* تغيير الخلفية عند التمرير */
+        border-radius: 5px;
+    }
+
+/* تأثير تغيير اللون للأزرار */
+.btn-primary {
+    background-color: #3498db;
+    border: none;
+    color: #fff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #2980b9; /* لون مختلف عند التمرير */
+        color: #ffffff; /* لون النص عند التمرير */
+    }
