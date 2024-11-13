@@ -30,5 +30,19 @@ namespace pro_exam.ViewModel
 
             return freeTimes;
         }
+
+
+        public int DoctorId { get; set; }
+        public string DoctorName { get; set; }
+
+        // قائمة تحتوي على أوقات العمل للطبيب
+        public List<DoctorSchedule> DoctorSchedules { get; set; }
+    }
+
+    public class DoctorSchedule
+    {
+        public int ScheduleId { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 }

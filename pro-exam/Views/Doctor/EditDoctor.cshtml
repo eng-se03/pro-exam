@@ -1,0 +1,68 @@
+﻿@model pro_exam.Models.Doctor
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل بيانات الدكتور</title>
+
+    <!-- رابط Bootstrap CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- رابط CSS مخصص -->
+    <link href="~/css/custom.css" rel="stylesheet">
+</head>
+
+<body style="background-color:lightblue">
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">تعديل بيانات الدكتور</h2>
+
+        <form asp-action="EditToDB" method="post" class="shadow p-4 rounded" style="background-color: #f8f9fa;">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="DoctorName">اسم الدكتور</label>
+                    <input type="text" asp-for="DoctorName" class="form-control" placeholder="أدخل اسم الدكتور" required />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label asp-for="Day">اليوم</label>
+                    <select asp-for="Day" class="form-control" required>
+                        <option value="Sunday">الأحد</option>
+                        <option value="Monday">الاثنين</option>
+                        <option value="Tuesday">الثلاثاء</option>
+                        <option value="Wednesday">الأربعاء</option>
+                        <option value="Thursday">الخميس</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="StartTime">وقت البداية</label>
+                    <input type="time" asp-for="StartTime" class="form-control" required />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label asp-for="EndTime">وقت النهاية</label>
+                    <input type="time" asp-for="EndTime" class="form-control" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col text-center mt-3">
+                    <button type="submit" class="btn btn-primary px-5">حفظ التعديلات</button>
+                    <a asp-action="GetFreeTime" class="btn btn-secondary px-5">إلغاء</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- JavaScript Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

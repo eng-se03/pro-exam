@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using pro_exam.DataBaseContext;
+using pro_exam.Models;
 using pro_exam.ViewModel;
 
 namespace pro_exam.Controllers
@@ -52,6 +53,64 @@ namespace pro_exam.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult EditDoctor(int Id)
+        {
+            var doctor = _context.Doctors.Find(Id);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+            return View(doctor);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditToDB(int Id, Doctor updatedDoctor)
+        {
+            if (Id != updatedDoctor.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var doctor = _context.Doctors.Find(Id);
+                if (doctor == null)
+                {
+                    return NotFound();
+                }
+
+                // تحديث بيانات الدكتور
+                doctor.DoctorName = updatedDoctor.DoctorName;
+                doctor.StartTime = updatedDoctor.StartTime;
+                doctor.EndTime = updatedDoctor.EndTime;
+                doctor.Day = updatedDoctor.Day;
+
+                // حفظ التعديلات
+                _context.SaveChanges();
+                return RedirectToAction("GetFreeTime");
+            }
+
+            return View(updatedDoctor);
+        }
+        [HttpPost]
+        public IActionResult DeleteDoctor(int Id)
+        {
+            var doctor = _context.Doctors.Find(Id);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            _context.Doctors.Remove(doctor);
+            _context.SaveChanges();
+
+            // بعد الحذف، العودة إلى الصفحة السابقة أو الصفحة الرئيسية
+            return RedirectToAction("GetFreeTime");
+        }
+
+     
 
 
     }
