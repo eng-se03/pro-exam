@@ -15,6 +15,23 @@ namespace pro_exam.DataBaseContext
            .HasIndex(u => u.DoctorName)
            .IsUnique();
 
+            // العلاقة بين Doctor و Monitoring (1-to-Many)
+            modelBuilder.Entity<Doctor>()
+                .HasMany(d => d.Monitorings)
+                .WithOne(m => m.Doctors)
+                .HasForeignKey(m => m.DoctorId)
+                .OnDelete(DeleteBehavior.Cascade); // حذف المراقبات عند حذف الطبيب
+
+            // العلاقة بين Schedule و Monitoring (1-to-Many)
+            modelBuilder.Entity<Schedule>()
+                .HasMany(s => s.Monitorings)
+                .WithOne(m => m.Schedule)
+                .HasForeignKey(m => m.ScheduleId)
+                .OnDelete(DeleteBehavior.Cascade); // حذف المراقبات عند حذف الجدول
+
+            // العلاقة بين Monitoring و Doctor-Schedule (Many-to-Many عبر جدول مركب)
+            modelBuilder.Entity<Montering>()
+                .HasKey(m => new { m.DoctorId, m.ScheduleId }); // تعريف المفتاح المركب
 
         }
 

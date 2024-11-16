@@ -30,19 +30,9 @@ namespace pro_exam.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Day")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("DoctorName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
@@ -54,21 +44,16 @@ namespace pro_exam.Migrations
 
             modelBuilder.Entity("pro_exam.Models.Montering", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.HasIndex("DoctorId");
+                    b.HasKey("DoctorId", "ScheduleId");
 
                     b.HasIndex("ScheduleId");
 
@@ -83,9 +68,15 @@ namespace pro_exam.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FreeTime")
+                    b.Property<string>("Day")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
@@ -112,13 +103,13 @@ namespace pro_exam.Migrations
             modelBuilder.Entity("pro_exam.Models.Montering", b =>
                 {
                     b.HasOne("pro_exam.Models.Doctor", "Doctors")
-                        .WithMany()
+                        .WithMany("Monitorings")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("pro_exam.Models.Schedule", "Schedule")
-                        .WithMany()
+                        .WithMany("Monitorings")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -126,6 +117,16 @@ namespace pro_exam.Migrations
                     b.Navigation("Doctors");
 
                     b.Navigation("Schedule");
+                });
+
+            modelBuilder.Entity("pro_exam.Models.Doctor", b =>
+                {
+                    b.Navigation("Monitorings");
+                });
+
+            modelBuilder.Entity("pro_exam.Models.Schedule", b =>
+                {
+                    b.Navigation("Monitorings");
                 });
 #pragma warning restore 612, 618
         }

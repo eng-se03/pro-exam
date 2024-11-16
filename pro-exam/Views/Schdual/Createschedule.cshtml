@@ -1,0 +1,79 @@
+﻿@model pro_exam.Models.Schedule
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Schedule</title>
+
+    <!-- Bootstrap CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/custom.css" rel="stylesheet">
+</head>
+
+<body style="background-color: #eef2f3;">
+
+    <div class="container mt-5">
+        <!-- عرض رسالة التأكيد -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <div class="form-container">
+            <h2 class="form-title text-center mb-4">Create New Schedule</h2>
+            <form asp-action="CreateSchedule" method="post">
+                <div class="form-group">
+                    <label for="DoctorId">Select Doctor</label>
+                    <select class="form-control" name="doctorId" required>
+                        <option value="">-- Select Doctor --</option>
+                        @foreach (var doctor in ViewBag.Doctors)
+                        {
+                            <option value="@doctor.Id">@doctor.DoctorName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="Day">Day</label>
+                    <select class="form-control" asp-for="Day" required>
+                        <option value="">Select Day</option>
+                        <option>Sunday</option>
+                        <option>Monday</option>
+                        <option>Tuesday</option>
+                        <option>Wednesday</option>
+                        <option>Thursday</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="StartTime">Start Time</label>
+                    <input type="time" class="form-control" asp-for="StartTime" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="EndTime">End Time</label>
+                    <input type="time" class="form-control" asp-for="EndTime" required>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Create Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap CDN JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -14,50 +14,33 @@
 </head>
 
 <body style="background-color:lightblue">
-
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Add New Doctor</h2>
-        <form asp-action="AddToDB" class="shadow p-4 rounded" style="background-color: #f8f9fa;" id="doctorForm">
-            <div class="form-row">
-
-                <div class="form-group col-md-6">
-                    <label for="DoctorName">Doctor Name</label>
-                    <input type="text" class="form-control" asp-for="DoctorName" placeholder="Enter doctor's name" required>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label for="Day">Day</label>
-                    <select class="form-control" asp-for="Day" required>
-                        <option value="">Select Day</option>
-                        <option>Sunday</option>
-                        <option>Monday</option>
-                        <option>Tuesday</option>
-                        <option>Wednesday</option>
-                        <option>Thursday</option>
-                    </select>
-                </div>
-
+        <!-- عرض رسالة التأكيد -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+        }
+        
+                <div class="container mt-5">
+                    <div class="form-container">
+                        <h2 class="form-title text-center">Add New Doctor</h2>
+                        <form asp-action="AddToDB" id="doctorForm">
+                            <div class="form-group">
+                                <label for="DoctorName">Doctor Name</label>
+                                <input type="text" class="form-control" asp-for="DoctorName" placeholder="Enter doctor's name" required>
+                            </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="StartTime">Start Time</label>
-                    <input type="time" class="form-control" asp-for="StartTime" required>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5" id="submitButton">Add Doctor</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <div class="form-group col-md-6" >
-                    <label for="EndTime">End Time</label>
-                    <input type="time" class="form-control" asp-for="EndTime" required>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="col text-center mt-3">
-                    <input type="submit" class="btn btn-primary px-5" value="Add Doctor" id="submitButton">
-                </div>
-            </div>
-        </form>
-    </div>
 
     <!-- Bootstrap CDN JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

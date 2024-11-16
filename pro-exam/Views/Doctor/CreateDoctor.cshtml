@@ -1,0 +1,10 @@
+﻿@model pro_exam.Models.Doctor
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="DoctorName">Doctor Name</label>
+        <input type="text" class="form-control" asp-for="DoctorName" required />
+        <span asp-validation-for="DoctorName" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

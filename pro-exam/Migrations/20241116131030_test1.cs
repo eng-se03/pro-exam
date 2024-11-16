@@ -17,10 +17,7 @@ namespace pro_exam.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DoctorName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Day = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false)
+                    DoctorName = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,7 +30,9 @@ namespace pro_exam.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FreeTime = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Day = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,14 +56,13 @@ namespace pro_exam.Migrations
                 name: "Montering",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     DoctorId = table.Column<int>(type: "int", nullable: false),
-                    ScheduleId = table.Column<int>(type: "int", nullable: false)
+                    ScheduleId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Montering", x => x.Id);
+                    table.PrimaryKey("PK_Montering", x => new { x.DoctorId, x.ScheduleId });
                     table.ForeignKey(
                         name: "FK_Montering_Doctors_DoctorId",
                         column: x => x.DoctorId,
@@ -84,11 +82,6 @@ namespace pro_exam.Migrations
                 table: "Doctors",
                 column: "DoctorName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Montering_DoctorId",
-                table: "Montering",
-                column: "DoctorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Montering_ScheduleId",
