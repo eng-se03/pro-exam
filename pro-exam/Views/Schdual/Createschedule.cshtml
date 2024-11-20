@@ -74,6 +74,54 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript Animation Effects -->
+    <script>
+        // تأثير ظهور تدريجي عند تحميل الصفحة
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".container").style.opacity = 0;
+            fadeInEffect(document.querySelector(".container"));
+        });
+
+        function fadeInEffect(element) {
+            let opacity = 0;
+            const timer = setInterval(function () {
+                if (opacity >= 1) clearInterval(timer);
+                element.style.opacity = opacity;
+                opacity += 0.05;
+            }, 15);
+        }
+
+        // تأثير وميض عند التركيز على الحقول
+        const formFields = document.querySelectorAll("input[type='text'], input[type='time'], select");
+        formFields.forEach(field => {
+            field.addEventListener("focus", function () {
+                field.style.transition = "box-shadow 0.3s ease";
+                field.style.boxShadow = "0px 0px 10px rgba(0, 123, 255, 0.5)";
+            });
+            field.addEventListener("blur", function () {
+                field.style.boxShadow = "none";
+            });
+        });
+
+        // تأثير اهتزاز للزر عند تمرير الماوس فوقه
+        const submitButton = document.getElementById("submitButton");
+        submitButton.addEventListener("mouseenter", function () {
+            submitButton.style.transition = "transform 0.1s";
+            submitButton.style.transform = "translateX(-3px)";
+            setTimeout(() => submitButton.style.transform = "translateX(3px)", 100);
+            setTimeout(() => submitButton.style.transform = "translateX(0px)", 200);
+        });
+
+        // نافذة تأكيد عند إرسال النموذج
+        document.getElementById("doctorForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // منع الإرسال الافتراضي
+            const confirmation = confirm("Are you sure you want to add this doctor?");
+            if (confirmation) {
+                this.submit(); // إرسال النموذج بعد التأكيد
+            }
+        });
+    </script>
 </body>
 
 </html>

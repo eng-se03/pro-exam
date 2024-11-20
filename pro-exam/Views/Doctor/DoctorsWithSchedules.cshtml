@@ -252,6 +252,21 @@
 
     <!-- JavaScript -->
     <script>
+        // تأثير ظهور تدريجي عند تحميل الصفحة
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".container").style.opacity = 0;
+            fadeInEffect(document.querySelector(".container"));
+        });
+
+        function fadeInEffect(element) {
+            let opacity = 0;
+            const timer = setInterval(function () {
+                if (opacity >= 1) clearInterval(timer);
+                element.style.opacity = opacity;
+                opacity += 0.05;
+            }, 15);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const deleteButtons = document.querySelectorAll('form button[type="submit"]');
 

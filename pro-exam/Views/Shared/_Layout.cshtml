@@ -7,12 +7,29 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/pro_exam.styles.css" asp-append-version="true" />
+
+    <style>
+
+        .logo-container {
+            text-align: center; /* لتوسيط الصورة */
+        }
+
+            .logo-container img {
+                max-width: 100px; /* العرض الأقصى */
+                height: auto; /* الحفاظ على النسبة */
+                display: block; /* إزالة المسافات الإضافية للصورة */
+                margin: 0 auto; /* لجعل الصورة تتوسط الحاوية */
+            }
+
+    </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">pro_exam</a>
+                <a class="navbar-brand" href="/">
+                    <img src="~/images/Pro_Exam.png" alt="Pro_Exam" style="height: 60px;width: auto;">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
