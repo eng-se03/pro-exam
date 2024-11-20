@@ -1,6 +1,75 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // استخدم Layout المشروع الخاص بك
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copyright</title>
+    <style>
+        body {
+            background-color: #f4f4f4; /* خلفية رمادية فاتحة */
+            font-family: Arial, sans-serif;
+        }
+
+        .copyright-container {
+            background-color: #ffffff; /* خلفية بيضاء */
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل خفيف */
+            max-width: 800px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            color: #0d47a1; /* أزرق غامق */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333333; /* نص غامق */
+            text-align: justify;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777777; /* نص خافت */
+        }
+
+        a {
+            color: #0d47a1; /* رابط أزرق */
+            text-decoration: none;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="copyright-container">
+        <h1>حقوق الملكية الفكرية</h1>
+        <p>
+            جميع المحتويات المتاحة على هذا الموقع، بما في ذلك النصوص والصور والشعارات والتصاميم،
+            هي ملكية حصرية للمشروع ولا يجوز نسخها أو إعادة نشرها أو توزيعها دون إذن كتابي مسبق.
+        </p>
+        <p>
+            إذا كانت لديك أي أسئلة بخصوص حقوق النشر أو ترغب في استخدام أي من المواد المعروضة هنا،
+            يرجى التواصل معنا عبر البريد الإلكتروني <a href="mailto:y.alshyoukh@gmail.com">mail</a>.
+        </p>
+        <p>
+            نحن ملتزمون بحماية حقوق النشر والملكية الفكرية وضمان استخدامها بشكل عادل وقانوني.
+        </p>
+        <div class="footer-note">
+            &copy; 2024 جميع الحقوق محفوظة. اسم مشروعك.
+        </div>
+    </div>
+</body>
+</html>

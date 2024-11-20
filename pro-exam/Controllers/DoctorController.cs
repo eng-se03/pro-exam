@@ -4,6 +4,10 @@ using pro_exam.DataBaseContext;
 using pro_exam.Models;
 using pro_exam.ViewModel;
 using static pro_exam.ViewModel.DoctorScheduleViewModel;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace pro_exam.Controllers
 {
