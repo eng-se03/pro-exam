@@ -12,48 +12,79 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+    <!-- رابط Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            background-color: #e3f2fd;
-            font-family: Arial, sans-serif;
-        }
+            background: linear-gradient(to right, #b3cde0, #6497b1); /* خلفية زرقاء فاتحة جدًا */
+        font-family: Arial, sans-serif;
+    }
 
-        .container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    .container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(13, 71, 161, 0.2); /* ظلال زرقاء */
+    }
 
-        h2, h3 {
-            color: #0d47a1;
-        }
+    h2, h3 {
+            color: #003366; /* أزرق غامق */
+    }
 
-        table {
-            border-collapse: collapse;
-        }
+    table {
+        border-collapse: collapse;
+    }
 
-        th {
-            background-color: #1565c0;
-            color: #1e4d6f;
-        }
+    th {
+        background-color: #1e88e5; /* أزرق متوسط */
+        color: #003366; /* لون النص الكحلي */
+    }
 
-        tbody tr:nth-child(odd) {
-            background-color: #bbdefb;
-        }
+    tbody tr:nth-child(odd) {
+        background-color: #bbdefb; /* أزرق فاتح */
+    }
 
-        tbody tr:nth-child(even) {
-            background-color: #e3f2fd;
-        }
+    tbody tr:nth-child(even) {
+        background-color: #e3f2fd; /* أزرق أفتح */
+    }
 
-        tbody tr:hover {
-            background-color: #90caf9;
-        }
+    tbody tr:hover {
+        background-color: #90caf9; /* أزرق مشرق */
+    }
 
-        .alert-warning {
-            background-color: #fff3e0;
-            color: #bf360c;
-        }
+    .alert-warning {
+        background-color: #e3f2fd; /* أزرق أفتح */
+        color: #0d47a1; /* أزرق غامق للنص */
+    }
+
+    input.form-control {
+        border: 1px solid #1e88e5; /* حدود زرقاء */
+        background-color: #f0f7ff; /* خلفية زرقاء فاتحة جدًا */
+        color: #0d47a1; /* لون النص أزرق */
+    }
+
+    input.form-control:focus {
+        box-shadow: 0 0 5px rgba(30, 136, 229, 0.5); /* ظلال زرقاء عند التحديد */
+        border-color: #1565c0; /* أزرق غامق عند التحديد */
+    }
+
+    .btn-danger {
+        background-color: #e57373; /* أحمر فاتح */
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #ef5350; /* أحمر غامق */
+    }
+
+    .btn-sm {
+        background-color: #42a5f5; /* زر أزرق فاتح */
+        color: #ffffff; /* لون النص أبيض */
+    }
+
+    .btn-sm:hover {
+        background-color: #1e88e5; /* زر أزرق أغمق */
+    }
     </style>
 </head>
 
@@ -71,6 +102,7 @@
                     <th>Day</th>
                     <th>Start Time</th>
                     <th>End Time</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,6 +116,20 @@
                             <td>@schedule.Day</td>
                             <td>@schedule.StartTime</td>
                             <td>@schedule.EndTime</td>
+                            <td>
+                                <a asp-action="EditSundayTuesdayThursday" asp-route-doctorId="@doctor.DoctorId">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <form  asp-action="DeleteSundayTuesdayThursday" method="post" style="display:inline;">
+                                    <input type="hidden" name="doctorId" value="@doctor.DoctorId" />
+                                    <input type="hidden" name="day" value="@schedule.Day" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+
                         </tr>
                     }
                 }
@@ -100,6 +146,7 @@
                     <th>Day</th>
                     <th>Start Time</th>
                     <th>End Time</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -113,6 +160,24 @@
                             <td>@schedule.Day</td>
                             <td>@schedule.StartTime</td>
                             <td>@schedule.EndTime</td>
+                            <td>
+                                <a asp-action="EditMondayWednesday" asp-route-doctorId="@doctor.DoctorId">
+                                    <i class="fas fa-edit"></i>
+
+                                </a>
+
+                                
+                            
+                                <form asp-action="DeleteMondayWednesday" method="post" style="display:inline;">
+                                    <input type="hidden" name="doctorId" value="@doctor.DoctorId" />
+                                    <input type="hidden" name="day" value="@schedule.Day" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                                
+                            </td>
+
                         </tr>
                     }
                 }
@@ -175,6 +240,7 @@
                                     <td>@currentSchedule.Day</td>
                                     <td>@currentSchedule.EndTime</td>
                                     <td>@nextSchedule.StartTime</td>
+
                                 </tr>
                             }
                         }
@@ -186,6 +252,17 @@
 
     <!-- JavaScript -->
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteButtons = document.querySelectorAll('form button[type="submit"]');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    if (!confirm('Are you sure you want to delete this schedule?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
         document.addEventListener('DOMContentLoaded', () => {
             const filterName = document.getElementById('filterName');
             const filterId = document.getElementById('filterId');

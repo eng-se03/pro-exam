@@ -69,62 +69,193 @@ namespace pro_exam.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult EditSchedule(int Id)
+
+
+
+        public IActionResult EditSundayTuesdayThursday(int doctorId)
         {
-            // البحث عن الجدول باستخدام Id
-            var schedule = _context.Schedules.Find(Id);
-            if (schedule == null)
+            var doctor = _context.Doctors
+                .Include(d => d.Monitorings)
+                .ThenInclude(m => m.Schedule)
+                .FirstOrDefault(d => d.Id == doctorId);
+
+            if (doctor == null)
+                return NotFound("Doctor not found");
+
+            var viewModel = new DoctorScheduleViewModel
             {
-                return NotFound();
-            }
-            return View(schedule); // عرض صفحة التعديل مع البيانات الموجودة
+                DoctorId = doctor.Id,
+                DoctorName = doctor.DoctorName,
+                SundayTuesdayThursdaySchedules = doctor.Monitorings
+                    .Where(m => m.Schedule.Day == "Sunday" || m.Schedule.Day == "Tuesday" || m.Schedule.Day == "Thursday")
+                    .Select(m => new ScheduleViewModel
+                    {
+                        Day = m.Schedule.Day,
+                        StartTime = m.Schedule.StartTime,
+                        EndTime = m.Schedule.EndTime
+                    }).ToList()
+            };
+
+            return View(viewModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditScheduleToDB(int Id, Schedule updatedSchedule)
-        {
-            if (Id != updatedSchedule.Id)
-            {
-                return BadRequest();
-            }
 
-                // البحث عن الجدول المراد تعديله
-                var schedule = _context.Schedules.Find(Id);
-                if (schedule == null)
+        [HttpPost]
+        public IActionResult SaveSundayTuesdayThursday(DoctorScheduleViewModel model)
+        {
+            var doctor = _context.Doctors
+                .Include(d => d.Monitorings)
+                .ThenInclude(m => m.Schedule)
+                .FirstOrDefault(d => d.Id == model.DoctorId);
+
+            if (doctor == null)
+                return NotFound("Doctor not found");
+
+            foreach (var schedule in model.SundayTuesdayThursdaySchedules)
+            {
+                var scheduleToUpdate = doctor.Monitorings
+                    .FirstOrDefault(m => m.Schedule.Day == schedule.Day)?.Schedule;
+
+                if (scheduleToUpdate != null)
                 {
-                    return NotFound();
+                    scheduleToUpdate.StartTime = schedule.StartTime;
+                    scheduleToUpdate.EndTime = schedule.EndTime;
                 }
-
-                // تحديث بيانات الجدول
-                schedule.Day = updatedSchedule.Day;
-                schedule.StartTime = updatedSchedule.StartTime;
-                schedule.EndTime = updatedSchedule.EndTime;
-
-                // حفظ التعديلات
-                _context.SaveChanges();
-                return RedirectToAction("DoctorsWithSchedules"); // إعادة التوجيه إلى صفحة العرض
-            
-
-            return View(updatedSchedule); // إذا لم يكن النموذج صحيحًا، العودة إلى صفحة التعديل مع البيانات
-        }
-        [HttpPost]
-        public IActionResult DeleteSchedule(int Id)
-        {
-            // البحث عن الجدول باستخدام Id
-            var schedule = _context.Schedules.Find(Id);
-            if (schedule == null)
-            {
-                return NotFound();
             }
 
-            // حذف الجدول
-            _context.Schedules.Remove(schedule);
             _context.SaveChanges();
 
-            // بعد الحذف، العودة إلى صفحة العرض الرئيسية
-            return RedirectToAction("DoctorsWithSchedules"); // قم بتغيير "DoctorsWithSchedules" حسب اسم صفحة العرض لديك
+            TempData["SuccessMessage"] = "Schedules updated successfully!";
+            return RedirectToAction("DoctorsWithSchedules");
+        }
+
+
+
+        public IActionResult EditMondayWednesday(int doctorId)
+        {
+            var doctor = _context.Doctors
+                .Include(d => d.Monitorings)
+                .ThenInclude(m => m.Schedule)
+                .FirstOrDefault(d => d.Id == doctorId);
+
+            if (doctor == null)
+                return NotFound("Doctor not found");
+
+            var viewModel = new DoctorScheduleViewModel
+            {
+                DoctorId = doctor.Id,
+                DoctorName = doctor.DoctorName,
+                MondayWednesdaySchedules = doctor.Monitorings
+                    .Where(m => m.Schedule.Day == "Monday" || m.Schedule.Day == "Wednesday")
+                    .Select(m => new ScheduleViewModel
+                    {
+                        Day = m.Schedule.Day,
+                        StartTime = m.Schedule.StartTime,
+                        EndTime = m.Schedule.EndTime
+                    }).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult SaveMondayWednesday(DoctorScheduleViewModel model)
+        {
+            var doctor = _context.Doctors
+                .Include(d => d.Monitorings)
+                .ThenInclude(m => m.Schedule)
+                .FirstOrDefault(d => d.Id == model.DoctorId);
+
+            if (doctor == null)
+                return NotFound("Doctor not found");
+
+            foreach (var schedule in model.MondayWednesdaySchedules)
+            {
+                var scheduleToUpdate = doctor.Monitorings
+                    .FirstOrDefault(m => m.Schedule.Day == schedule.Day)?.Schedule;
+
+                if (scheduleToUpdate != null)
+                {
+                    scheduleToUpdate.StartTime = schedule.StartTime;
+                    scheduleToUpdate.EndTime = schedule.EndTime;
+                }
+            }
+
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "Schedules updated successfully!";
+            return RedirectToAction("DoctorsWithSchedules");
+        }
+
+
+        [HttpPost]
+        public IActionResult DeleteMondayWednesday(int doctorId, string day)
+        {
+            // البحث عن الطبيب في قاعدة البيانات مع المواعيد
+            var doctor = _context.Doctors
+                .Include(d => d.Monitorings)
+                .ThenInclude(m => m.Schedule)
+                .FirstOrDefault(d => d.Id == doctorId);
+
+            if (doctor == null)
+            {
+                return NotFound("Doctor not found");
+            }
+
+            // البحث عن الجدول الخاص باليوم المحدد وحذفه
+            var monitoringToDelete = doctor.Monitorings
+                .FirstOrDefault(m => m.Schedule.Day == day);
+
+            if (monitoringToDelete != null)
+            {
+                _context.Montering.Remove(monitoringToDelete);
+                _context.SaveChanges();
+
+                TempData["SuccessMessage"] = $"Schedule for {day} deleted successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Schedule not found.";
+            }
+
+            return RedirectToAction("DoctorsWithSchedules");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult DeleteSundayTuesdayThursday(int doctorId, string day)
+        {
+            // البحث عن الطبيب في قاعدة البيانات مع المواعيد
+            var doctor = _context.Doctors
+                .Include(d => d.Monitorings)
+                .ThenInclude(m => m.Schedule)
+                .FirstOrDefault(d => d.Id == doctorId);
+
+            if (doctor == null)
+            {
+                return NotFound("Doctor not found");
+            }
+
+            // البحث عن الجدول الخاص باليوم المحدد وحذفه
+            var monitoringToDelete = doctor.Monitorings
+                .FirstOrDefault(m => m.Schedule.Day == day);
+
+            if (monitoringToDelete != null)
+            {
+                _context.Montering.Remove(monitoringToDelete);
+                _context.SaveChanges();
+
+                TempData["SuccessMessage"] = $"Schedule for {day} deleted successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Schedule not found.";
+            }
+
+            return RedirectToAction("DoctorsWithSchedules");
         }
 
 
@@ -134,123 +265,6 @@ namespace pro_exam.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //public ActionResult AddNewDoctor() { 
-
-
-
-        //return View();
-        //}
-
-        //[HttpPost]
-        //public IActionResult AddToDB(pro_exam.Models.Doctor doctor)
-        //{
-        //    _context.Doctors.Add(doctor);
-        //    _context.SaveChanges();
-
-
-        //    return RedirectToAction("GetFreeTime");
-        //}
-
-        //    [HttpGet]
-        //public IActionResult GetFreeTime()
-        //{
-        //    var model = new DoctorScheduleViewModel
-        //    {
-        //        SundayTuesdayThursdayDoctors = _context.Doctors
-        //            .Where(d => d.Day == "Sunday" || d.Day == "Tuesday" || d.Day == "Thursday")
-        //            .OrderBy(d => d.StartTime) // ترتيب تصاعدي حسب StartTime
-        //            .ToList(),
-
-        //        MondayWednesdayDoctors = _context.Doctors
-        //            .Where(d => d.Day == "Monday" || d.Day == "Wednesday")
-        //            .OrderBy(d => d.StartTime) // ترتيب تصاعدي حسب StartTime
-        //            .ToList()
-        //    };
-
-        //    // حساب أوقات الفراغ لكل مجموعة
-        //    ViewBag.SundayTuesdayThursdayFreeTimes = model.GetFreeTimes(model.SundayTuesdayThursdayDoctors);
-        //    ViewBag.MondayWednesdayFreeTimes = model.GetFreeTimes(model.MondayWednesdayDoctors);
-
-        //    return View(model);
-        //}
-
-        //[HttpGet]
-        //public IActionResult EditDoctor(int Id)
-        //{
-        //    var doctor = _context.Doctors.Find(Id);
-        //    if (doctor == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(doctor);
-        //}
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult EditToDB(int Id, Doctor updatedDoctor)
-        //{
-        //    if (Id != updatedDoctor.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var doctor = _context.Doctors.Find(Id);
-        //        if (doctor == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        // تحديث بيانات الدكتور
-        //        doctor.DoctorName = updatedDoctor.DoctorName;
-        //        doctor.StartTime = updatedDoctor.StartTime;
-        //        doctor.EndTime = updatedDoctor.EndTime;
-        //        doctor.Day = updatedDoctor.Day;
-
-        //        // حفظ التعديلات
-        //        _context.SaveChanges();
-        //        return RedirectToAction("GetFreeTime");
-        //    }
-
-        //    return View(updatedDoctor);
-        //}
-        //[HttpPost]
-        //public IActionResult DeleteDoctor(int Id)
-        //{
-        //    var doctor = _context.Doctors.Find(Id);
-        //    if (doctor == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Doctors.Remove(doctor);
-        //    _context.SaveChanges();
-
-        //    // بعد الحذف، العودة إلى الصفحة السابقة أو الصفحة الرئيسية
-        //    return RedirectToAction("GetFreeTime");
-        //}
 
 
 
