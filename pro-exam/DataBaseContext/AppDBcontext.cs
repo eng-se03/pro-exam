@@ -39,6 +39,8 @@ namespace pro_exam.DataBaseContext
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<Montering> Montering { get; set; }
+        public DbSet<Exam> Exams { get; set; }
+
 
 
     }

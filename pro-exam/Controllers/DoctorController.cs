@@ -34,13 +34,24 @@ namespace pro_exam.Controllers
         [HttpPost]
         public IActionResult AddToDB(pro_exam.Models.Doctor doctor)
         {
+            // تحقق إذا كان اسم الدكتور موجودًا بالفعل
+            var existingDoctor = _context.Doctors.FirstOrDefault(d => d.DoctorName == doctor.DoctorName);
+
+            if (existingDoctor != null)
+            {
+                // إضافة رسالة إلى TempData في حالة وجود الدكتور مسبقًا
+                TempData["ErrorMessage"] = "Doctor with the same name already exists!";
+                return RedirectToAction("AddNewDoctor");
+            }
+
+            // إذا لم يكن موجودًا، قم بإضافته إلى قاعدة البيانات
             _context.Doctors.Add(doctor);
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = "Doctor has been added successfully!";
-
             return RedirectToAction("AddNewDoctor");
         }
+
 
 
 

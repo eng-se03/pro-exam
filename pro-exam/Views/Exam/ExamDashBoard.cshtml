@@ -1,0 +1,140 @@
+﻿@model IEnumerable<pro_exam.Models.Exam>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam List</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #b3cde0, #6497b1); /* خلفية زرقاء متدرجة */
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* ظلال خفيفة */
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: #0d47a1; /* لون النص الأزرق الداكن */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th {
+            background-color: #1565c0; /* أزرق غامق */
+            color: #ffffff; /* النص أبيض */
+            text-align: center;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #bbdefb; /* أزرق فاتح */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #e3f2fd; /* أزرق أفتح */
+        }
+
+        tbody tr:hover {
+            background-color: #90caf9; /* تأثير عند التمرير */
+        }
+
+        .btn-primary {
+            background-color: #0d47a1;
+            border-color: #0d47a1;
+        }
+
+            .btn-primary:hover {
+                background-color: #1565c0;
+            }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-danger {
+            background-color: #e57373;
+            border-color: #e57373;
+        }
+
+        .btn-dark {
+            background-color: #424242;
+            border-color: #424242;
+        }
+
+        .form-control {
+            border: 1px solid #1e88e5; /* حدود زرقاء */
+            background-color: #f0f7ff; /* خلفية زرقاء فاتحة جدًا */
+            color: #0d47a1; /* لون النص أزرق */
+        }
+
+            .form-control:focus {
+                box-shadow: 0 0 5px rgba(30, 136, 229, 0.5); /* ظلال زرقاء عند التحديد */
+                border-color: #1565c0;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="file" class="form-label">Select File</label>
+                    <input type="file" name="file" class="form-control" />
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" asp-controller="Doctor" asp-action="ExcelFileReader" class="btn btn-dark">
+                        Read Excel File
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <h2 class="text-center mt-5 mb-4">Exam List</h2>
+        <a href="@Url.Action("AddExam", "Exam")" class="btn btn-primary mb-3">Add New Exam</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Course Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var exam in Model)
+                {
+                    <tr>
+                        <td>@exam.Id</td>
+                        <td>@exam.CourseName</td>
+                        <td>@exam.StartExamTime</td>
+                        <td>@exam.EndExamTime</td>
+                        <td>
+                            <a href="@Url.Action("EditExam", "Exam", new { id = exam.Id })" class="btn btn-sm btn-warning">Edit</a>
+                            <form asp-action="DeleteExam" asp-controller="Exam" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@exam.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

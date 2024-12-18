@@ -12,7 +12,7 @@ using pro_exam.DataBaseContext;
 namespace pro_exam.Migrations
 {
     [DbContext(typeof(AppDBcontext))]
-    [Migration("20241116131030_test1")]
+    [Migration("20241218152223_test1")]
     partial class test1
     {
         /// <inheritdoc />
@@ -43,6 +43,29 @@ namespace pro_exam.Migrations
                         .IsUnique();
 
                     b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("pro_exam.Models.Exam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CourseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("EndExamTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("StartExamTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Exams");
                 });
 
             modelBuilder.Entity("pro_exam.Models.Montering", b =>

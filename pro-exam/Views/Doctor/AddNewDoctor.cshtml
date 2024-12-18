@@ -16,15 +16,20 @@
 <body style="background-color:lightblue">
     <div class="container mt-5">
         <!-- عرض رسالة التأكيد -->
-        @if (TempData["SuccessMessage"] != null)
+        @if (TempData["ErrorMessage"] != null)
         {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["SuccessMessage"]
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
             </div>
         }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
         
                 <div class="container mt-5">
                     <div class="form-container">

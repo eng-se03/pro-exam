@@ -25,6 +25,21 @@ namespace pro_exam.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Exams",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CourseName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartExamTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    EndExamTime = table.Column<TimeSpan>(type: "time", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Exams", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Schedules",
                 columns: table => new
                 {
@@ -92,6 +107,9 @@ namespace pro_exam.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Exams");
+
             migrationBuilder.DropTable(
                 name: "Montering");
 

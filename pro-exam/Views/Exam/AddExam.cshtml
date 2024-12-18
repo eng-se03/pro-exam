@@ -1,0 +1,19 @@
+﻿@model pro_exam.Models.Exam
+<div class="container mt-5">
+    <h2>Add New Exam</h2>
+    <form asp-action="AddExam" method="post">
+        <div class="form-group">
+            <label>Course Name</label>
+            <input asp-for="CourseName" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>StartExamTime</label>
+            <input asp-for="StartExamTime" type="time" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>EndExamTime</label>
+            <input asp-for="EndExamTime" type="time" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-success">Add Exam</button>
+    </form>
+</div>
