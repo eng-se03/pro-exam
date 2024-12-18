@@ -8,6 +8,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using ExcelDataReader;
 
 namespace pro_exam.Controllers
 {
@@ -264,6 +265,94 @@ namespace pro_exam.Controllers
 
 
 
+
+
+
+
+        //  database اضافة الصفحة اكسل على ال 
+
+        [HttpPost]
+        public async Task<IActionResult> ExcelFileReader(IFormFile file)
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            if (file != null && file.Length > 0)
+            {
+                var uploadDirectory = $"{Directory.GetCurrentDirectory()}\\wwwroot\\Uploads";
+                if (!Directory.Exists(uploadDirectory))
+                {
+                    Directory.CreateDirectory(uploadDirectory);
+                }
+
+                var filePath = Path.Combine(uploadDirectory, file.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                // قراءة الملف وتخزين البيانات في قاعدة البيانات
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        while (reader.Read())
+                        {
+                            // تخطي الصف الأول إذا كان يحتوي على رؤوس الأعمدة
+                            if (reader.Depth == 0) continue;
+
+                            // قراءة البيانات من كل عمود
+                            var doctorName = reader.GetValue(0)?.ToString();
+                            var day = reader.GetValue(1)?.ToString();
+                            var startTime = TimeSpan.Parse(reader.GetValue(2)?.ToString());
+                            var endTime = TimeSpan.Parse(reader.GetValue(3)?.ToString());
+
+                            // التحقق من صحة البيانات
+                            if (string.IsNullOrEmpty(doctorName) || string.IsNullOrEmpty(day))
+                                continue;
+
+                            // حفظ البيانات في قاعدة البيانات
+                            await SaveRecordToDatabase(doctorName, day, startTime, endTime);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("DoctorsWithSchedules"); // أو عرض رسالة نجاح
+        }
+
+        private async Task SaveRecordToDatabase(string doctorName, string day, TimeSpan startTime, TimeSpan endTime)
+        {
+            // التحقق من وجود الطبيب
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorName == doctorName);
+            if (doctor == null)
+            {
+                doctor = new Doctor
+                {
+                    DoctorName = doctorName
+                };
+                _context.Doctors.Add(doctor);
+                await _context.SaveChangesAsync();
+            }
+
+            // إنشاء جدول زمني جديد
+            var schedule = new Schedule
+            {
+                Day = day,
+                StartTime = startTime,
+                EndTime = endTime
+            };
+            _context.Schedules.Add(schedule);
+            await _context.SaveChangesAsync();
+
+            // ربط الطبيب بالجدول الزمني
+            var monitoring = new Montering
+            {
+                DoctorId = doctor.Id,
+                ScheduleId = schedule.Id
+            };
+            _context.Montering.Add(monitoring);
+            await _context.SaveChangesAsync();
+        }
 
 
 

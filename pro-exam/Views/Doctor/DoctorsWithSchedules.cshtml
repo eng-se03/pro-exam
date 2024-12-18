@@ -89,13 +89,22 @@
 </head>
 
 <body>
-    <!-- إضافة زر لتحميل ملف Excel -->
-<div class="mb-3 text-center">
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file" class="form-control" />
-        <button type="submit" class="btn btn-primary mt-2">Upload Excel</button>
-    </form>
-</div>
+  Add This Into View 
+<form method="post" enctype="multipart/form-data">
+
+    <div class="row">
+        <label>Select File</label>
+        <input type="file" name="file" value="file" class="form-control" />
+
+    </div>
+    <div class="row" style="padding-top:10px;">
+        <div class="col-3">
+            <input type="submit" asp-controller="Doctor" asp-action="ExcelFileReader" class="btn btn-dark" value="Read Excel File" />
+        </div>
+    </div>
+</form>
+
+
 
     <div class="container mt-5">
         <h2 class="text-center mb-4">Doctor Free Time Slots</h2>
