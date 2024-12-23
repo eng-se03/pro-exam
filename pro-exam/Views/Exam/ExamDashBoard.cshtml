@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam List</title>
-
+    <!-- رابط Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -121,10 +122,11 @@
                         <td>@exam.StartExamTime</td>
                         <td>@exam.EndExamTime</td>
                         <td>
-                            <a href="@Url.Action("EditExam", "Exam", new { id = exam.ExamId })" class="btn btn-sm btn-warning">Edit</a>
-                            <form asp-action="DeleteExam" asp-controller="Exam" method="post" style="display:inline;">
+                            <a href="@Url.Action("EditExam", "Exam", new { id = exam.ExamId })" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                            <form asp-action="DeleteExam" asp-controller="Exam" method="post" style="display:inline;" >
                                 <input type="hidden" name="id" value="@exam.ExamId" />
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+
+                                <button type="submit" class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
                         <td>
