@@ -89,6 +89,7 @@
 </head>
 
 <body>
+
 <form method="post" enctype="multipart/form-data">
 
     <div class="row">
@@ -203,6 +204,9 @@
         <!-- جدول أوقات الفراغ -->
         <h3 class="text-center mb-4">Free Time</h3>
 
+        <a asp-action="GenerateFreeTimes" class="btn btn-primary">Generate Free Times</a>
+
+
         <!-- فلاتر أعلى الجدول -->
         <div class="mb-3">
             <div class="row">
@@ -224,45 +228,71 @@
         }
         else
         {
-            <table class="table table-bordered table-hover" id="freeTimeTable">
-                <thead>
-                    <tr>
-                        <th>Doctor Id</th>
-                        <th>Doctor Name</th>
-                        <th>Day</th>
-                        <th>Free From</th>
-                        <th>Free Until</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var doctor in Model)
-                    {
-                        var allSchedules = doctor.SundayTuesdayThursdaySchedules
-                        .Union(doctor.MondayWednesdaySchedules)
-                        .OrderBy(s => s.Day)
-                        .ThenBy(s => s.StartTime)
-                        .ToList();
+            <form asp-action="SaveDoctorFreeTime" method="post">
+    <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Doctor ID</th>
+                            <th>Doctor Name</th>
+                            <th>Day</th>
+                            <th>Start Free Time</th>
+                            <th>End Free Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var recordIndex = 0; // تعريف المتغير في بداية الملف أو داخل الـ View
+                        }
 
-                        for (int i = 0; i < allSchedules.Count - 1; i++)
+
+                        @foreach (var doctor in Model)
                         {
-                            var currentSchedule = allSchedules[i];
-                            var nextSchedule = allSchedules[i + 1];
+                            var allSchedules = doctor.SundayTuesdayThursdaySchedules
+                            .Union(doctor.MondayWednesdaySchedules)
+                            .OrderBy(s => s.Day)
+                            .ThenBy(s => s.StartTime)
+                            .ToList();
 
-                            if (currentSchedule.EndTime < nextSchedule.StartTime)
+                            for (int i = 0; i < allSchedules.Count - 1; i++)
                             {
-                                <tr>
-                                    <td>@doctor.DoctorId</td>
-                                    <td>@doctor.DoctorName</td>
-                                    <td>@currentSchedule.Day</td>
-                                    <td>@currentSchedule.EndTime</td>
-                                    <td>@nextSchedule.StartTime</td>
+                                var currentSchedule = allSchedules[i];
+                                var nextSchedule = allSchedules[i + 1];
 
-                                </tr>
+                                if (currentSchedule.EndTime < nextSchedule.StartTime)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="DoctorFreeTimeList[@recordIndex].DoctorId" value="@doctor.DoctorId" />
+                                            @doctor.DoctorId
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="DoctorFreeTimeList[@recordIndex].DoctorName" value="@doctor.DoctorName" />
+                                            @doctor.DoctorName
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="DoctorFreeTimeList[@recordIndex].Day" value="@currentSchedule.Day" />
+                                            @currentSchedule.Day
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="DoctorFreeTimeList[@recordIndex].StartFreeTime" value="@currentSchedule.EndTime" />
+                                            @currentSchedule.EndTime
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="DoctorFreeTimeList[@recordIndex].EndFreeTime" value="@nextSchedule.StartTime" />
+                                            @nextSchedule.StartTime
+                                        </td>
+                                    </tr>
+
+                                    @* زيادة الفهرس لتجنب الكتابة فوق نفس العنصر *@
+                                    recordIndex++;
+                                }
                             }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Save Free Times</button>
+</form>
+
         }
     </div>
 

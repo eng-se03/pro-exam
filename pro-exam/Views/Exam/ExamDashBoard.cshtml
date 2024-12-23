@@ -1,4 +1,4 @@
-﻿@model IEnumerable<pro_exam.Models.Exam>
+﻿@model IEnumerable<pro_exam.ViewModel.ExamWithAvailableDoctorsViewModel>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,7 +34,7 @@
 
         th {
             background-color: #1565c0; /* أزرق غامق */
-            color: #ffffff; /* النص أبيض */
+            color:darkblue; /* النص أبيض */
             text-align: center;
         }
 
@@ -69,11 +69,6 @@
             border-color: #e57373;
         }
 
-        .btn-dark {
-            background-color: #424242;
-            border-color: #424242;
-        }
-
         .form-control {
             border: 1px solid #1e88e5; /* حدود زرقاء */
             background-color: #f0f7ff; /* خلفية زرقاء فاتحة جدًا */
@@ -96,7 +91,7 @@
                     <input type="file" name="file" class="form-control" />
                 </div>
                 <div class="col-md-6 d-flex align-items-end">
-                    <button type="submit" asp-controller="Doctor" asp-action="ExcelFileReader" class="btn btn-dark">
+                    <button type="submit" asp-controller="Exam" asp-action="ExcelFileReader" class="btn btn-dark">
                         Read Excel File
                     </button>
                 </div>
@@ -105,35 +100,53 @@
 
         <h2 class="text-center mt-5 mb-4">Exam List</h2>
         <a href="@Url.Action("AddExam", "Exam")" class="btn btn-primary mb-3">Add New Exam</a>
-        <table class="table table-bordered">
+        <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Exam ID</th>
                     <th>Course Name</th>
+                    <th>Day</th>
                     <th>Start Time</th>
                     <th>End Time</th>
-                    <th>Actions</th>
+                    <th>Available Doctors</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var exam in Model)
                 {
                     <tr>
-                        <td>@exam.Id</td>
+                        <td>@exam.ExamId</td>
                         <td>@exam.CourseName</td>
+                        <td>@exam.Day</td>
                         <td>@exam.StartExamTime</td>
                         <td>@exam.EndExamTime</td>
                         <td>
-                            <a href="@Url.Action("EditExam", "Exam", new { id = exam.Id })" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="@Url.Action("EditExam", "Exam", new { id = exam.ExamId })" class="btn btn-sm btn-warning">Edit</a>
                             <form asp-action="DeleteExam" asp-controller="Exam" method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="@exam.Id" />
+                                <input type="hidden" name="id" value="@exam.ExamId" />
                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                             </form>
+                        </td>
+                        <td>
+                            @if (exam.AvailableDoctors.Any())
+                            {
+                                <ul>
+                                    @foreach (var doctor in exam.AvailableDoctors)
+                                    {
+                                        <li>@doctor</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span>No available doctors</span>
+                            }
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+
     </div>
 </body>
 

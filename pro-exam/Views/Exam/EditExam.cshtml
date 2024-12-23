@@ -10,6 +10,12 @@
             <input asp-for="CourseName" class="form-control" required />
         </div>
         <div class="form-group">
+            <label for="Day">Day</label>
+            <select asp-for="Day" asp-items="@(new SelectList(new[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday" }, Model.Day))" class="form-control" required>
+                <option value="">Select Day</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="StartExamTime">Start Time</label>
             <input asp-for="StartExamTime" type="time" class="form-control" required />
         </div>

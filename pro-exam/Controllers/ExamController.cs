@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using pro_exam.DataBaseContext;
 using pro_exam.Models;
+using pro_exam.ViewModel;
 
 namespace pro_exam.Controllers
 {
@@ -15,9 +16,37 @@ namespace pro_exam.Controllers
         // عرض قائمة جميع الامتحانات
         public IActionResult ExamDashBoard()
         {
-            var exams = _context.Exams.ToList();
-            return View(exams);
+            var examsWithDoctors = _context.Exams
+                .Select(exam => new ExamWithAvailableDoctorsViewModel
+                {
+                    ExamId = exam.Id,
+                    CourseName = exam.CourseName,
+                    Day = exam.Day,
+                    StartExamTime = exam.StartExamTime,
+                    EndExamTime = exam.EndExamTime,
+                    AvailableDoctors = _context.DoctorFreeTimes
+                        .Where(freeTime =>
+                            freeTime.Day == exam.Day && // مقارنة يوم الامتحان مع يوم الفراغ
+                            freeTime.StartFreeTime <= exam.StartExamTime && // وقت بداية الفراغ يغطي بداية الامتحان
+                            freeTime.EndFreeTime >= exam.EndExamTime) // وقت نهاية الفراغ يغطي نهاية الامتحان
+                        .Select(ft => ft.DoctorName) // جلب أسماء الدكاترة المتاحين
+                        .ToList()
+                }).ToList();
+
+            return View(examsWithDoctors);
         }
+
+
+
+
+
+
+
+
+
+
+
+
 
         public IActionResult AddExam()
         {

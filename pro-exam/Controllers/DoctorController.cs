@@ -275,6 +275,24 @@ namespace pro_exam.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult SaveDoctorFreeTime(List<DoctorFreeTime> DoctorFreeTimeList)
+        {
+            if (DoctorFreeTimeList == null || !DoctorFreeTimeList.Any())
+            {
+                return RedirectToAction("DoctorsWithSchedules");
+            }
+
+            // إضافة البيانات إلى قاعدة البيانات
+            _context.DoctorFreeTimes.AddRange(DoctorFreeTimeList);
+
+            // حفظ التغييرات
+            _context.SaveChanges();
+
+            return RedirectToAction("DoctorsWithSchedules");
+        }
+
+
 
 
 
@@ -366,12 +384,14 @@ namespace pro_exam.Controllers
         }
 
 
-
-
-
-
-
-
-
     }
 }
+
+
+
+
+
+
+
+
+

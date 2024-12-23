@@ -7,11 +7,22 @@
             <input asp-for="CourseName" class="form-control" />
         </div>
         <div class="form-group">
-            <label>StartExamTime</label>
+            <label>Day</label>
+            <select asp-for="Day" class="form-control">
+                <option value="">Select Day</option>
+                <option value="Sunday">Sunday</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Start Exam Time</label>
             <input asp-for="StartExamTime" type="time" class="form-control" />
         </div>
         <div class="form-group">
-            <label>EndExamTime</label>
+            <label>End Exam Time</label>
             <input asp-for="EndExamTime" type="time" class="form-control" />
         </div>
         <button type="submit" class="btn btn-success">Add Exam</button>

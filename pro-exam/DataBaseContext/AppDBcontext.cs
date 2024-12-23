@@ -40,6 +40,7 @@ namespace pro_exam.DataBaseContext
         public DbSet<User> User { get; set; }
         public DbSet<Montering> Montering { get; set; }
         public DbSet<Exam> Exams { get; set; }
+        public DbSet<DoctorFreeTime> DoctorFreeTimes { get; set; }
 
 
 
