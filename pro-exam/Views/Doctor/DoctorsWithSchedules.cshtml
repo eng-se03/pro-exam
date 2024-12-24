@@ -244,6 +244,13 @@
                             var recordIndex = 0; // تعريف المتغير في بداية الملف أو داخل الـ View
                         }
 
+                        @if (TempData["Message"] != null)
+                        {
+                            <div class="alert alert-warning">
+                                @TempData["Message"]
+                            </div>
+                        }
+
 
                         @foreach (var doctor in Model)
                         {

@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using ExcelDataReader;
+using System.Net;
+using System.Net.Mail;
 
 namespace pro_exam.Controllers
 {
@@ -20,8 +22,6 @@ namespace pro_exam.Controllers
         {
             _context = context;
         }
-
-
 
 
         public ActionResult AddNewDoctor()
@@ -276,21 +276,81 @@ namespace pro_exam.Controllers
 
 
         [HttpPost]
-        public IActionResult SaveDoctorFreeTime(List<DoctorFreeTime> DoctorFreeTimeList)
+        public IActionResult SaveDoctorFreeTime()
         {
-            if (DoctorFreeTimeList == null || !DoctorFreeTimeList.Any())
+            var doctors = _context.Doctors
+                .Include(d => d.Monitorings)
+                .ThenInclude(m => m.Schedule)
+                .ToList();
+
+            bool dataAlreadyExists = false;
+
+            foreach (var doctor in doctors)
             {
-                return RedirectToAction("DoctorsWithSchedules");
+                // جميع الأوقات المعروضة في الـ View
+                var allSchedules = doctor.Monitorings
+                    .Select(m => m.Schedule)
+                    .OrderBy(s => s.Day)
+                    .ThenBy(s => s.StartTime)
+                    .ToList();
+
+                for (int i = 0; i < allSchedules.Count - 1; i++)
+                {
+                    var currentSchedule = allSchedules[i];
+                    var nextSchedule = allSchedules[i + 1];
+
+                    if (currentSchedule.EndTime < nextSchedule.StartTime)
+                    {
+                        // إنشاء سجل وقت الفراغ
+                        var freeTimeDay = currentSchedule.Day;
+                        var startFreeTime = currentSchedule.EndTime;
+                        var endFreeTime = nextSchedule.StartTime;
+
+                        // تحقق إذا كان وقت الفراغ موجود بالفعل
+                        var exists = _context.DoctorFreeTimes.Any(dft =>
+                            dft.DoctorId == doctor.Id &&
+                            dft.Day == freeTimeDay &&
+                            dft.StartFreeTime == startFreeTime &&
+                            dft.EndFreeTime == endFreeTime);
+
+                        if (!exists)
+                        {
+                            var doctorFreeTime = new DoctorFreeTime
+                            {
+                                DoctorId = doctor.Id,
+                                DoctorName = doctor.DoctorName,
+                                Day = freeTimeDay,
+                                StartFreeTime = startFreeTime,
+                                EndFreeTime = endFreeTime
+                            };
+
+                            _context.DoctorFreeTimes.Add(doctorFreeTime);
+                        }
+                        else
+                        {
+                            dataAlreadyExists = true; // إذا كانت البيانات موجودة
+                        }
+                    }
+                }
             }
 
-            // إضافة البيانات إلى قاعدة البيانات
-            _context.DoctorFreeTimes.AddRange(DoctorFreeTimeList);
-
-            // حفظ التغييرات
+            // حفظ التغييرات إذا كان هناك بيانات جديدة
             _context.SaveChanges();
+
+            // إذا كانت البيانات موجودة بالفعل، إرسال رسالة إلى الـ View
+            if (dataAlreadyExists)
+            {
+                TempData["Message"] = "بعض البيانات موجودة بالفعل في قاعدة البيانات!";
+            }
+            else
+            {
+                TempData["Message"] = "تم حفظ جميع البيانات بنجاح!";
+            }
 
             return RedirectToAction("DoctorsWithSchedules");
         }
+
+
 
 
 
