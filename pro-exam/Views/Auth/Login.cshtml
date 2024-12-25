@@ -1,18 +1,91 @@
-﻿<form asp-action="Login" method="post">
-    <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="Email" class="form-control" required />
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #b3cde0, #6497b1);
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: 80px auto;
+        }
+
+        h2 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #0d47a1;
+            border-color: #0d47a1;
+        }
+
+        .btn-primary:hover {
+            background-color: #1565c0;
+        }
+
+        .form-control {
+            border: 1px solid #1e88e5;
+            background-color: #f0f7ff;
+            color: #0d47a1;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 5px rgba(30, 136, 229, 0.5);
+            border-color: #1565c0;
+        }
+
+        .generate-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .generate-btn button {
+            background-color: #42a5f5;
+            border-color: #42a5f5;
+            color: white;
+        }
+
+        .generate-btn button:hover {
+            background-color: #1e88e5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form asp-action="Login" method="post">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="Email" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>OTP</label>
+                <input type="text" name="OTP" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+
+        <div class="generate-btn">
+            <form asp-action="UserCode" method="post">
+                <button type="submit" class="btn btn-primary">Generate Code</button>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label>OTP</label>
-        <input type="text" name="OTP" class="form-control" required />
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+</body>
 
-<form asp-action="UserCode" method="post">
-
-
-    <button type="submit" class="btn btn-primary">generatecode</button>
-
-</form>
+</html>
