@@ -146,10 +146,31 @@
                         </td>
                     </tr>
                 }
+
             </tbody>
         </table>
 
     </div>
+    <form asp-action="ResetDatabase" method="post" onsubmit="return confirm('Are you sure you want to reset the database? This action cannot be undone!');">
+        <button type="submit" class="btn btn-danger" style="margin:50px 100px 50px 450px ">Reset Database</button>
+    </form>
+    <script>
+        // تأثير ظهور تدريجي عند تحميل الصفحة
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".container").style.opacity = 0;
+            fadeInEffect(document.querySelector(".container"));
+        });
+
+        function fadeInEffect(element) {
+            let opacity = 0;
+            const timer = setInterval(function () {
+                if (opacity >= 1) clearInterval(timer);
+                element.style.opacity = opacity;
+                opacity += 0.05;
+            }, 15);
+        }
+</script>
+
 </body>
 
 </html>

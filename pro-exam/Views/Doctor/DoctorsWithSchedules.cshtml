@@ -71,6 +71,8 @@
     .btn-danger {
         background-color: #e57373; /* أحمر فاتح */
         border: none;
+        
+
     }
 
     .btn-danger:hover {
@@ -89,6 +91,8 @@
 </head>
 
 <body>
+
+    
 
 <form method="post" enctype="multipart/form-data">
 
@@ -204,7 +208,6 @@
         <!-- جدول أوقات الفراغ -->
         <h3 class="text-center mb-4">Free Time</h3>
 
-        <a asp-action="GenerateFreeTimes" class="btn btn-primary">Generate Free Times</a>
 
 
         <!-- فلاتر أعلى الجدول -->
@@ -331,6 +334,7 @@
                 });
             });
         });
+
         document.addEventListener('DOMContentLoaded', () => {
             const filterName = document.getElementById('filterName');
             const filterId = document.getElementById('filterId');
@@ -366,6 +370,10 @@
             filterTime.addEventListener('input', applyFilters);
         });
     </script>
+    <form asp-action="ResetDatabase" method="post" onsubmit="return confirm('Are you sure you want to reset the database? This action cannot be undone!');">
+        <button type="submit" class="btn btn-danger"    style="margin:50px 100px 50px 450px ">Reset Database</button>
+    </form>
+
 </body>
 
 </html>

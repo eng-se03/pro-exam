@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using pro_exam.DataBaseContext;
+using pro_exam.email_service;
+using System.Net.Mail;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDBcontext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddTransient<EmailService>();
 
 var app = builder.Build();
 

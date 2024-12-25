@@ -443,7 +443,28 @@ namespace pro_exam.Controllers
             await _context.SaveChangesAsync();
         }
 
+        [HttpPost]
+        public IActionResult ResetDatabase()
+        {
+            try
+            {
+                // حذف جميع البيانات من الجداول
+                _context.Doctors.RemoveRange(_context.Doctors);
+                _context.Schedules.RemoveRange(_context.Schedules);
 
+                // حفظ التغييرات
+                _context.SaveChanges();
+
+                // إضافة رسالة نجاح
+                TempData["SuccessMessage"] = "Database has been reset successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while resetting the database: {ex.Message}";
+            }
+
+            return RedirectToAction("Index"); // استبدل بـ الصفحة المناسبة
+        }
     }
 }
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ExcelDataReader;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using pro_exam.DataBaseContext;
 using pro_exam.Models;
 using pro_exam.ViewModel;
@@ -95,5 +97,103 @@ namespace pro_exam.Controllers
             TempData["SuccessMessage"] = "Exam deleted successfully!";
             return RedirectToAction("ExamDashBoard");
         }
+
+
+
+
+
+        //  database اضافة الصفحة اكسل على ال 
+
+        [HttpPost]
+        public async Task<IActionResult> ExcelFileReader(IFormFile file)
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            if (file != null && file.Length > 0)
+            {
+                var uploadDirectory = $"{Directory.GetCurrentDirectory()}\\wwwroot\\Uploads";
+                if (!Directory.Exists(uploadDirectory))
+                {
+                    Directory.CreateDirectory(uploadDirectory);
+                }
+
+                var filePath = Path.Combine(uploadDirectory, file.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                // قراءة الملف وتخزين البيانات في قاعدة البيانات
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        while (reader.Read())
+                        {
+                            // تخطي الصف الأول إذا كان يحتوي على رؤوس الأعمدة
+                            if (reader.Depth == 0) continue;
+
+                            // قراءة البيانات من كل عمود
+                            var CourseName = reader.GetValue(0)?.ToString();
+                            var Day = reader.GetValue(1)?.ToString();
+                            var StartExamTime = TimeSpan.Parse(reader.GetValue(2)?.ToString());
+                            var EndExamTime = TimeSpan.Parse(reader.GetValue(3)?.ToString());
+
+                            // التحقق من صحة البيانات
+                            if (string.IsNullOrEmpty(CourseName) || string.IsNullOrEmpty(Day))
+                                continue;
+
+                            // حفظ البيانات في قاعدة البيانات
+                            await SaveRecordToDatabase(CourseName, Day, StartExamTime, EndExamTime);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("ExamDashBoard"); // أو عرض رسالة نجاح
+        }
+
+        private async Task SaveRecordToDatabase(string CourseName, string Day, TimeSpan StartExamTime, TimeSpan EndExamTime)
+        {
+
+
+            // إنشاء جدول زمني جديد
+            var exam = new Exam
+            {
+                CourseName = CourseName,
+                Day = Day,
+                StartExamTime = StartExamTime,
+                EndExamTime = EndExamTime
+            };
+            _context.Exams.Add(exam);
+            await _context.SaveChangesAsync();
+
+        }
+
+
+        [HttpPost]
+        public IActionResult ResetDatabase()
+        {
+            try
+            {
+                // حذف جميع البيانات من الجداول            
+                _context.Exams.RemoveRange(_context.Exams);
+                _context.DoctorFreeTimes.RemoveRange(_context.DoctorFreeTimes);
+
+                // حفظ التغييرات
+                _context.SaveChanges();
+
+                // إضافة رسالة نجاح
+                TempData["SuccessMessage"] = "Database has been reset successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while resetting the database: {ex.Message}";
+            }
+
+            return RedirectToAction("Index"); // استبدل بـ الصفحة المناسبة
+        }
+
+
     }
 }
