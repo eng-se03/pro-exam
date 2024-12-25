@@ -1,4 +1,6 @@
 ﻿using ExcelDataReader;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using pro_exam.DataBaseContext;
@@ -7,6 +9,7 @@ using pro_exam.ViewModel;
 
 namespace pro_exam.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ExamController : Controller
     {
         private readonly AppDBcontext _context;

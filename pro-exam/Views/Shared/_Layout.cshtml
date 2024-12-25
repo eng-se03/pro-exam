@@ -21,9 +21,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Doctor" asp-action="AddNewDoctor">Login</a>
-                        </li>
+                       
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Doctor" asp-action="AddNewDoctor">Add New Doctor</a>
                         </li>
@@ -36,6 +34,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Exam" asp-action="ExamDashBoard">Exams</a>
+                        </li>
+                        <li class="nav-item">
+@*                             <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Logout</a>
+ *@                            <form asp-action="Logout" asp-controller="Auth">
+                                <button class="nav-link text-dark" type="submit"> Logout   </button>
+                            </form>
                         </li>
                     </ul>
                 </div>

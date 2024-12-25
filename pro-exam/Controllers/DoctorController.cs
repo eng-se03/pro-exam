@@ -11,9 +11,13 @@ using System.Linq;
 using ExcelDataReader;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace pro_exam.Controllers
+
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class DoctorController : Controller
     {
         private readonly AppDBcontext _context;

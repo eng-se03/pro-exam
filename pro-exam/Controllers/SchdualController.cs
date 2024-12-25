@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using pro_exam.DataBaseContext;
 using pro_exam.Models;
 
+namespace pro_exam.Controllers;
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class SchdualController : Controller
 {
+
     private readonly AppDBcontext _context;
 
     public SchdualController(AppDBcontext context)
