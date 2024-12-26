@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using pro_exam.DataBaseContext;
 using pro_exam.Models;
 using pro_exam.ViewModel;
+using OfficeOpenXml;
+
 
 namespace pro_exam.Controllers
 {
@@ -198,5 +200,79 @@ namespace pro_exam.Controllers
         }
 
 
-    }
+
+
+
+
+        [HttpGet]
+        public IActionResult GenerateExamReport()
+        {
+            var examsWithDoctors = _context.Exams
+                .Select(exam => new ExamWithAvailableDoctorsViewModel
+                {
+                    ExamId = exam.Id,
+                    CourseName = exam.CourseName,
+                    Day = exam.Day,
+                    StartExamTime = exam.StartExamTime,
+                    EndExamTime = exam.EndExamTime,
+                    AvailableDoctors = _context.Doctors
+                        .Where(doctor => doctor.Monitorings.Any(m =>
+                            m.Schedule.Day == exam.Day &&
+                            m.Schedule.StartTime <= exam.StartExamTime &&
+                            m.Schedule.EndTime >= exam.EndExamTime))
+                        .Select(d => d.DoctorName)
+                        .ToList()
+                }).ToList();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Exam Report");
+
+                // Add Headers
+                worksheet.Cells[1, 1].Value = "Exam ID";
+                worksheet.Cells[1, 2].Value = "Course Name";
+                worksheet.Cells[1, 3].Value = "Day";
+                worksheet.Cells[1, 4].Value = "Start Time";
+                worksheet.Cells[1, 5].Value = "End Time";
+                worksheet.Cells[1, 6].Value = "Available Doctors";
+
+                // Add Data
+                int row = 2;
+                foreach (var exam in examsWithDoctors)
+                {
+                    worksheet.Cells[row, 1].Value = exam.ExamId;
+                    worksheet.Cells[row, 2].Value = exam.CourseName;
+                    worksheet.Cells[row, 3].Value = exam.Day;
+                    worksheet.Cells[row, 4].Value = exam.StartExamTime.ToString(@"hh\:mm");
+                    worksheet.Cells[row, 5].Value = exam.EndExamTime.ToString(@"hh\:mm");
+                    worksheet.Cells[row, 6].Value = string.Join(", ", _context.DoctorFreeTimes
+                        .Where(freeTime =>
+                            freeTime.Day == exam.Day && // مقارنة يوم الامتحان مع يوم الفراغ
+                            freeTime.StartFreeTime <= exam.StartExamTime && // وقت بداية الفراغ يغطي بداية الامتحان
+                            freeTime.EndFreeTime >= exam.EndExamTime) // وقت نهاية الفراغ يغطي نهاية الامتحان
+                        .Select(ft => ft.DoctorName) // جلب أسماء الدكاترة المتاحين
+                        .ToList());
+
+                    row++;
+                }
+
+                // Auto-fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Generate File
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+
+                string fileName = "Exam_Report.xlsx";
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                return File(stream, contentType, fileName);
+            }
+
+
+        }
+        }
 }

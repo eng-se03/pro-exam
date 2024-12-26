@@ -207,9 +207,7 @@
 
         <!-- جدول أوقات الفراغ -->
         <h3 class="text-center mb-4">Free Time</h3>
-
-
-
+       
         <!-- فلاتر أعلى الجدول -->
         <div class="mb-3">
             <div class="row">
@@ -232,6 +230,14 @@
         else
         {
             <form asp-action="SaveDoctorFreeTime" method="post">
+            <div class="row">
+                    <div class="col-md-4">
+
+                <button type="submit" class="btn btn-primary">Save Free Times</button>
+                </div>
+                </div>
+
+
     <table class="table">
                     <thead>
                         <tr>
@@ -300,7 +306,6 @@
                         }
                     </tbody>
     </table>
-    <button type="submit" class="btn btn-primary">Save Free Times</button>
 </form>
 
         }
@@ -371,7 +376,7 @@
         });
     </script>
     <form asp-action="ResetDatabase" method="post" onsubmit="return confirm('Are you sure you want to reset the database? This action cannot be undone!');">
-        <button type="submit" class="btn btn-danger"    style="margin:50px 100px 50px 450px ">Reset Database</button>
+        <button type="submit" class="btn btn-danger" style="margin:50px 100px 50px 450px ">Reset Database</button>
     </form>
 
 </body>

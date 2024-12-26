@@ -86,12 +86,12 @@
 <body>
     <div class="container">
         <form method="post" enctype="multipart/form-data">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="file" class="form-label">Select File</label>
                     <input type="file" name="file" class="form-control" />
                 </div>
-                <div class="col-md-6 d-flex align-items-end">
+                <div class="col-md-6 d-flex align-items-end justify-content-end">
                     <button type="submit" asp-controller="Exam" asp-action="ExcelFileReader" class="btn btn-dark">
                         Read Excel File
                     </button>
@@ -100,7 +100,18 @@
         </form>
 
         <h2 class="text-center mt-5 mb-4">Exam List</h2>
-        <a href="@Url.Action("AddExam", "Exam")" class="btn btn-primary mb-3">Add New Exam</a>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <a href="@Url.Action("AddExam", "Exam")" class="btn btn-primary">Add New Exam</a>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="@Url.Action("GenerateExamReport", "Exam")" class="btn btn-success">
+                    Download Excel Report
+                </a>
+            </div>
+        </div>
+
         <table class="table">
             <thead>
                 <tr>
@@ -109,6 +120,7 @@
                     <th>Day</th>
                     <th>Start Time</th>
                     <th>End Time</th>
+                    <th>Actions</th>
                     <th>Available Doctors</th>
                 </tr>
             </thead>
@@ -123,9 +135,8 @@
                         <td>@exam.EndExamTime</td>
                         <td>
                             <a href="@Url.Action("EditExam", "Exam", new { id = exam.ExamId })" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                            <form asp-action="DeleteExam" asp-controller="Exam" method="post" style="display:inline;" >
+                            <form asp-action="DeleteExam" asp-controller="Exam" method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="@exam.ExamId" />
-
                                 <button type="submit" class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
@@ -146,7 +157,6 @@
                         </td>
                     </tr>
                 }
-
             </tbody>
         </table>
 
