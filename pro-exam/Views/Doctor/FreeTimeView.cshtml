@@ -1,0 +1,303 @@
+﻿@model IEnumerable<DoctorScheduleViewModel>
+@using pro_exam.ViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Free Time Slots</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- رابط Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: lightblue; /* خلفية زرقاء فاتحة جدًا */
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(13, 71, 161, 0.2); /* ظلال زرقاء */
+        }
+
+        h2, h3 {
+            color: #0d47a1; /* أزرق غامق */
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #1e88e5; /* أزرق متوسط */
+            color:black; /* لون النص أبيض */
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #bbdefb; /* أزرق فاتح */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #e3f2fd; /* أزرق أفتح */
+        }
+
+        tbody tr:hover {
+            background-color: #90caf9; /* أزرق مشرق */
+        }
+
+        .alert-warning {
+            background-color: #e3f2fd; /* أزرق أفتح */
+            color: #0d47a1; /* أزرق غامق للنص */
+        }
+
+        input.form-control {
+            border: 1px solid #1e88e5; /* حدود زرقاء */
+            background-color: #f0f7ff; /* خلفية زرقاء فاتحة جدًا */
+            color: #0d47a1; /* لون النص أزرق */
+        }
+
+            input.form-control:focus {
+                box-shadow: 0 0 5px rgba(30, 136, 229, 0.5); /* ظلال زرقاء عند التحديد */
+                border-color: #1565c0; /* أزرق غامق عند التحديد */
+            }
+
+        .btn-danger {
+            background-color: #e57373; /* أحمر فاتح */
+            border: none;
+        }
+
+            .btn-danger:hover {
+                background-color: #ef5350; /* أحمر غامق */
+            }
+
+        .btn-sm {
+            background-color: #42a5f5; /* زر أزرق فاتح */
+            color: #ffffff; /* لون النص أبيض */
+        }
+
+            .btn-sm:hover {
+                background-color: #1e88e5; /* زر أزرق أغمق */
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Doctor Free Time Slots</h2>
+
+        <!-- جدول مواعيد الأحد/الثلاثاء/الخميس -->
+        <h3 class="text-center mb-4">Schedules (Sunday, Tuesday, Thursday)</h3>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Doctor Id</th>
+                    <th>Doctor Name</th>
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var doctor in Model)
+                {
+                    @foreach (var schedule in doctor.SundayTuesdayThursdaySchedules)
+                    {
+                        <tr>
+                            <td>@doctor.DoctorId</td>
+                            <td>@doctor.DoctorName</td>
+                            <td>@schedule.Day</td>
+                            <td>@schedule.StartTime</td>
+                            <td>@schedule.EndTime</td>
+                            <td>
+                                <a asp-action="EditSundayTuesdayThursday" asp-route-doctorId="@doctor.DoctorId">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <form asp-action="DeleteSundayTuesdayThursday" method="post" style="display:inline;">
+                                    <input type="hidden" name="doctorId" value="@doctor.DoctorId" />
+                                    <input type="hidden" name="day" value="@schedule.Day" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <!-- جدول مواعيد الاثنين/الأربعاء -->
+        <h3 class="text-center mb-4">Schedules (Monday, Wednesday)</h3>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Doctor Id</th>
+                    <th>Doctor Name</th>
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var doctor in Model)
+                {
+                    @foreach (var schedule in doctor.MondayWednesdaySchedules)
+                    {
+                        <tr>
+                            <td>@doctor.DoctorId</td>
+                            <td>@doctor.DoctorName</td>
+                            <td>@schedule.Day</td>
+                            <td>@schedule.StartTime</td>
+                            <td>@schedule.EndTime</td>
+                            <td>
+                                <a asp-action="EditMondayWednesday" asp-route-doctorId="@doctor.DoctorId">
+                                    <i class="fas fa-edit"></i>
+
+                                </a>
+
+
+
+                                <form asp-action="DeleteMondayWednesday" method="post" style="display:inline;">
+                                    <input type="hidden" name="doctorId" value="@doctor.DoctorId" />
+                                    <input type="hidden" name="day" value="@schedule.Day" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+
+                            </td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <!-- جدول أوقات الفراغ -->
+        <h3 class="text-center mb-4">Free Time</h3>
+
+        <!-- فلاتر أعلى الجدول -->
+        <div class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" id="filterName" class="form-control" placeholder="Filter by Doctor Name">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="filterId" class="form-control" placeholder="Filter by Doctor ID">
+                </div>
+                <div class="col-md-4">
+                    <input type="time" id="filterTime" class="form-control" placeholder="Filter by Time">
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning text-center">No data available.</div>
+        }
+        else
+        {
+            <table class="table table-bordered table-hover" id="freeTimeTable">
+                <thead>
+                    <tr>
+                        <th>Doctor Id</th>
+                        <th>Doctor Name</th>
+                        <th>Day</th>
+                        <th>Free From</th>
+                        <th>Free Until</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var doctor in Model)
+                    {
+                        var allSchedules = doctor.SundayTuesdayThursdaySchedules
+                        .Union(doctor.MondayWednesdaySchedules)
+                        .OrderBy(s => s.Day)
+                        .ThenBy(s => s.StartTime)
+                        .ToList();
+
+                        for (int i = 0; i < allSchedules.Count - 1; i++)
+                        {
+                            var currentSchedule = allSchedules[i];
+                            var nextSchedule = allSchedules[i + 1];
+
+                            if (currentSchedule.EndTime < nextSchedule.StartTime)
+                            {
+                                <tr>
+                                    <td>@doctor.DoctorId</td>
+                                    <td>@doctor.DoctorName</td>
+                                    <td>@currentSchedule.Day</td>
+                                    <td>@currentSchedule.EndTime</td>
+                                    <td>@nextSchedule.StartTime</td>
+
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteButtons = document.querySelectorAll('form button[type="submit"]');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    if (!confirm('Are you sure you want to delete this schedule?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterName = document.getElementById('filterName');
+            const filterId = document.getElementById('filterId');
+            const filterTime = document.getElementById('filterTime');
+            const table = document.getElementById('freeTimeTable');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+            function applyFilters() {
+                const nameValue = filterName.value.toLowerCase();
+                const idValue = filterId.value.toLowerCase();
+                const timeValue = filterTime.value;
+
+                rows.forEach(row => {
+                    const name = row.cells[1].textContent.toLowerCase();
+                    const id = row.cells[0].textContent.toLowerCase();
+                    const freeFrom = row.cells[3].textContent;
+                    const freeUntil = row.cells[4].textContent;
+
+                    const matchesName = name.includes(nameValue);
+                    const matchesId = id.includes(idValue);
+                    const matchesTime = !timeValue || (freeFrom <= timeValue && timeValue <= freeUntil);
+
+                    if (matchesName && matchesId && matchesTime) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            filterName.addEventListener('input', applyFilters);
+            filterId.addEventListener('input', applyFilters);
+            filterTime.addEventListener('input', applyFilters);
+        });
+    </script>
+</body>
+
+</html>

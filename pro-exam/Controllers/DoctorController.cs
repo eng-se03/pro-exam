@@ -469,6 +469,37 @@ namespace pro_exam.Controllers
 
             return RedirectToAction("Index"); // استبدل بـ الصفحة المناسبة
         }
+
+
+
+
+        public IActionResult FreeTimeView()
+        {
+            var doctors = _context.Doctors
+       .Select(doctor => new DoctorScheduleViewModel
+       {
+           DoctorId = doctor.Id,
+           DoctorName = doctor.DoctorName,
+           SundayTuesdayThursdaySchedules = doctor.Monitorings
+               .Where(m => m.Schedule.Day == "Sunday" || m.Schedule.Day == "Tuesday" || m.Schedule.Day == "Thursday")
+               .Select(m => new ScheduleViewModel
+               {
+                   Day = m.Schedule.Day,
+                   StartTime = m.Schedule.StartTime,
+                   EndTime = m.Schedule.EndTime
+               }).ToList(),
+           MondayWednesdaySchedules = doctor.Monitorings
+               .Where(m => m.Schedule.Day == "Monday" || m.Schedule.Day == "Wednesday")
+               .Select(m => new ScheduleViewModel
+               {
+                   Day = m.Schedule.Day,
+                   StartTime = m.Schedule.StartTime,
+                   EndTime = m.Schedule.EndTime
+               }).ToList()
+       }).ToList();
+
+            return View(doctors);
+        }
     }
 }
 
